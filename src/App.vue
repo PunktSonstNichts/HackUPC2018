@@ -2,19 +2,33 @@
     <div id="app">
         <div id="bg"></div>
         <a id="greeting" href="/">
-            Hallo Garrelt,
+            Hello {{user.name}},
         </a>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
-    import HelloWorld from './components/Home.vue'
-
     export default {
         name: 'app',
-        components: {
-            HelloWorld
+        data: function () {
+            return {
+                user: {
+                    name: null,
+                    uid: null
+                }
+            }
+        },
+        watch:{
+            $route (to, from){
+                if (localStorage.getItem('user')) this.user = JSON.parse(localStorage.getItem('user'));
+            }
+        },
+        mounted() {
+            if (localStorage.getItem('user')) this.user = JSON.parse(localStorage.getItem('user'));
+            if (!this.user.name) {
+                this.$router.push('Login');
+            }
         }
     }
 </script>
@@ -43,7 +57,8 @@
         flex-direction: column;
         box-shadow: inset 0px 0px 20px #361E57;
     }
-    #greeting{
+
+    #greeting {
         font-size: 3.4em;
         text-shadow: 2px 3px 1px #361E57;
         padding: 20px 20px 0px;
@@ -51,8 +66,7 @@
         text-decoration: none;
     }
 
-
-    #bg{
+    #bg {
         position: absolute;
         left: 0;
         right: 0;

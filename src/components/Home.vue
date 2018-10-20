@@ -1,12 +1,18 @@
 <template>
     <div id="main">
+        <div id="intro">
+            what do you want to report?
+        </div>
         <div id="crime">
             <router-link to="/putCrime" tag="button" id="crime_btn">crime</router-link>
         </div>
 
-        <div id="opinion">
-            <router-link to="/putCritic" tag="button" id="opinion_btn">opinion</router-link>
+        <div id="critic">
+            <router-link to="/putCritic" tag="button" id="critic_btn">critic</router-link>
         </div>
+        <div id="opinion">
+        <router-link to="/opinion" tag="button" id="opinion_btn">opinion</router-link>
+    </div>
     </div>
 </template>
 
@@ -32,11 +38,19 @@
         display: flex;
         align-items: center;
     }
+    #intro{
+        flex: 0;
+        display: inline-block;
+        font-size: 2em;
+        margin-top: -26px;
+        margin-bottom: 26px;
+    }
     button{
         border-radius: 100%;
         color: white;
         font-size: 2em;
-        border: 4px solid #361E57;
+        box-shadow: 1px 2px 8px 2px #361E57;
+        border: none;
         padding: 20px;
         display: flex;
         justify-content: center;
@@ -49,13 +63,16 @@
         height: 46vmin;
     }
 
-    #opinion_btn {
+    #critic_btn {
         background: #2F8C94;
         margin-left: auto;
         width: 35vmin;
         height: 35vmin;
     }
-    #qr_code{
+    #opinion_btn{
         background: #B1C212;
+        margin-right: auto;
+        width: 40vmin;
+        height: 40vmin;
     }
 </style>
