@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <div id="bg"></div>
-        <a id="greeting" href="/">
+        <a id="greeting" href="/index.html">
             Hello {{user.name}},
         </a>
         <router-view></router-view>
@@ -19,12 +19,30 @@
                 }
             }
         },
-        watch:{
-            $route (to, from){
+        watch: {
+            $route(to, from) {
                 if (localStorage.getItem('user')) this.user = JSON.parse(localStorage.getItem('user'));
             }
         },
+        created() {
+            document.addEventListener("resize", this.myEventHandler);
+        },
+        destroyed() {
+            document.removeEventListener("resize", this.myEventHandler);
+        },
+        methods: {
+            myEventHandler(e) {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+        },
         mounted() {
+            // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+            let vh = window.innerHeight * 0.01;
+            // Then we set the value in the --vh custom property to the root of the document
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+
             if (localStorage.getItem('user')) this.user = JSON.parse(localStorage.getItem('user'));
             if (!this.user.name) {
                 this.$router.push('Login');
@@ -46,7 +64,8 @@
         -moz-osx-font-smoothing: grayscale;
         color: white;
         background: rgba(74, 36, 152, 0.42);
-        height: 100vh;
+        height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+        height: calc(var(--vh, 1vh) * 100);
         width: 100vw;
         display: -webkit-box;
         display: -ms-flexbox;
@@ -77,4 +96,8 @@
         z-index: -1;
     }
 
+    .flex {
+        flex: 1;
+        min-height: 32px;
+    }
 </style>

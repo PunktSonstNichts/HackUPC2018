@@ -32,9 +32,9 @@
         display: flex;
         flex-direction: column;
         padding: 26px;
+        max-height: 90%;
     }
     #main > *{
-        flex: 1;
         display: flex;
         align-items: center;
     }
@@ -55,24 +55,40 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
+        z-index: 1;
+    }
+    #crime{
+        margin-top: 35px;
     }
     #crime_btn {
         background: #CB2A47;
         margin-right: auto;
         width: 46vmin;
         height: 46vmin;
+        max-height: 240px;
+        max-width: 240px;
     }
-
+    #critic{
+        margin-top: -40px;
+    }
     #critic_btn {
         background: #2F8C94;
         margin-left: auto;
         width: 35vmin;
         height: 35vmin;
+        max-height: 180px;
+        max-width: 180px;
+    }
+    #opinion {
+        margin-top: -60px;
     }
     #opinion_btn{
         background: #B1C212;
         margin-right: auto;
         width: 40vmin;
         height: 40vmin;
+        max-height: 200px;
+        max-width: 200px;
     }
 </style>

@@ -7,13 +7,17 @@
                                                                        aria-hidden="true"></i> make it anonymous
             </button>
         </div>
+
         <div v-if="!currentTarget" id="preselect">
             <span>{{errorMsg}}</span>
             <input type="text" placeholder="ID" v-model="mutablePlaceId"/>
             <button @click="checkPlaceID()">goto</button>
         </div>
+
         <div id="form" :class="{'secure': isAnonymous}" v-if="currentTarget">
-            <div style="flex: 1;"></div>
+            <div id="title">{{currentTarget.title}}</div>
+            <div id="description">{{currentTarget.description}}</div>
+            <div class="flex"></div>
             <div id="errorfield">{{errorMsg}}</div>
             <div id="submitArea">
                 <button @click="onSubmit(false)" id="thumbDown"><i class="fa fa-thumbs-down" aria-hidden="true"></i>
@@ -49,17 +53,42 @@
             },
             checkPlaceID: function () {
                 const scope = this;
-                scope.mutablePlaceId;
-                if(scope.mutablePlaceId){
+                if (scope.mutablePlaceId) {
                     scope.$router.replace('/opinion/' + scope.mutablePlaceId);
+                    const params = {
+                        TableName: "InhabitantOpinion",
+                        ProjectionExpression: "pid, category, title, description, lat, lng, #tp",
+                        FilterExpression: "#tp = :place AND pid = :s_pid",
+                        ExpressionAttributeNames: {
+                            "#tp": "type"
+                        },
+                        ExpressionAttributeValues: {
+                            ":place": "place",
+                            ":s_pid": parseInt(scope.mutablePlaceId)
+                        }
+                    };
+                    console.log(params);
+                    scope.docClient.scan(params, function (err, data) {
+                        if (err) {
+                            scope.errorMsg = "Server Error :/";
+                            return;
+                        }
+                        console.log(data);
+                        if (data.Count !== 1) {
+                            scope.errorMsg = "didn't find a matching place. Maybe a typo?";
+                            return;
+                        }
+                        scope.currentTarget = data.Items[0];
+
+                    });
                 }
             },
             init: function () {
                 const scope = this;
 
                 AWS.config.update({
-                    "accessKeyId": "AKIAJGAJK2YIN3GUJTIA",
-                    "secretAccessKey": "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",
+                    "accessKeyId": "AKIAJ3LD3LZB7Y6AHOYA",
+                    "secretAccessKey": "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",
                     "region": "eu-central-1"
                 });
 
@@ -74,26 +103,34 @@
             onSubmit: function (opinion) {
                 const scope = this;
 
+                function fake_guid() {
+                    return "ss-s-s-s-sss".replace(/s/g, s4);
+                }
+
+                function s4() {
+                    return Math.floor((1 + Math.random()) * 0x10000)
+                        .toString(16)
+                        .substring(1);
+                }
+
                 var params = {
                     TableName: "InhabitantOpinion",
                     Item: {
+                        "id": fake_guid(),
+                        "type": "place_opinion",
                         "uid": scope.isAnonymous ? null : scope.user.uid,
-                        "lng": scope.input.lng,
-                        "lat": scope.input.lat,
-                        "category": scope.input.category,
+                        "pid": parseInt(scope.mutablePlaceId),
                         "timestamp": Math.round((new Date()).getTime() / 1000),
-                        "description": scope.input.description ? scope.input.description : null,
                         "opinion": opinion
                     }
                 };
+                console.log(params);
 
                 this.docClient.put(params, function (err) {
                     if (err) {
                         scope.errorMsg = "Server Error :/";
                     } else {
-                        scope.input.category = null;
-                        scope.input.description = null;
-                        scope.errorMsg = null;
+                        scope.$router.push('/');
                     }
                 });
             }

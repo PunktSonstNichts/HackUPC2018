@@ -27,7 +27,7 @@
                 <i class="fa fa-clock-o icon" aria-hidden="true"></i>
                 <span> right now</span>
             </div>
-            <div style="flex: 1;"></div>
+            <div class="flex"></div>
             <div id="errorfield">{{errorMsg}}</div>
             <div id="submitArea">
                 <button v-if="type === 'critic'" @click="onSubmit(false)" id="thumbDown"><i class="fa fa-thumbs-down"
@@ -87,8 +87,8 @@
                 }
 
                 AWS.config.update({
-                    "accessKeyId": "AKIAJGAJK2YIN3GUJTIA",
-                    "secretAccessKey": "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",
+                    "accessKeyId": "AKIAJ3LD3LZB7Y6AHOYA",
+                    "secretAccessKey": "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",
                     "region": "eu-central-1"
                 });
 
@@ -155,7 +155,7 @@
         background: white;
         flex: 1;
         border-radius: 12px;
-        margin: 20px;
+        margin: 20px 20px 48px;
         border: 2px solid #361E57;
         overflow: hidden;
         display: flex;
